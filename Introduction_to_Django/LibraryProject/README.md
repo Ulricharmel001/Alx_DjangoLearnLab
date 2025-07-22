@@ -11,9 +11,9 @@ My learning roadmap includes setting up the Django project, creating the first a
 The project structure looks like this:
 
 Alx_DjangoLearnLab/
-├── LibrayProject/
+├── LibraryProject/
 │ ├── manage.py
-│ └── LibrayProject/
+│ └── LibraryProject/
 └── README.md
 
 
