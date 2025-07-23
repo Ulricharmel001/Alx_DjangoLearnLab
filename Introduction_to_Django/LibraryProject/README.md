@@ -1,4 +1,4 @@
-# 🚀 ALX Django Learn Lab
+# ALX Django Learn Lab
 
 This is my personal Django practice lab — part of my journey as a backend developer through the ALX Software Engineering Program. It contains basic exercises as I explore Django from setup to app creation.
 

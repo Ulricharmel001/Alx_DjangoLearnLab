@@ -1,4 +1,4 @@
-# ✏️ Update Operation
+# Update Operation
 
 python command:
 

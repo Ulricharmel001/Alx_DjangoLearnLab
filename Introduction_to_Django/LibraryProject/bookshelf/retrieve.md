@@ -1,8 +1,8 @@
-
 # Retrieve Operations
 
 
-```python
+python command:
+
 book = Book.objects.get(title="1984")
 book.title       # Output: '1984'
 book.author      # Output: 'George Orwell'
