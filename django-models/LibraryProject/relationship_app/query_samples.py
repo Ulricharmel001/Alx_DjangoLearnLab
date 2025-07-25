@@ -7,7 +7,7 @@ for book in Book:# for loop
 
 
 # retrieving book in a given library, in this case i assume, "Library_name" as the given library
-library = Library.objects.get(name = 'library_name')
+Library = Library.objects.get(name=library_name)
 book = library.books.all()
 
 
