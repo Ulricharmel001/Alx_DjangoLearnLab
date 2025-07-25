@@ -12,8 +12,8 @@ class Author(models.Model):
         return self.author_name
 
 class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+   book_title = models.CharField(max_length=200)
+   author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
 
 """
 creating a library model that relate to book using django ManyToManyField, that is a library can hold many
@@ -30,6 +30,6 @@ delete a library you delete, the librarian as well
 
 """
 class Librarian(models.Model):
-    name = models.CharField(max_length=200)
+    librarian_name = models.CharField(max_length=200)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
     
