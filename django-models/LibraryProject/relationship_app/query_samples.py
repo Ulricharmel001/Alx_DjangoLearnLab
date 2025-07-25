@@ -1,14 +1,14 @@
 from .models import Book, Librarian, Library, Author
 from django.db import models
-# retrieving book by a specific author, assuming "Dan lok" as our author
-book = Book.objects.filter(Author='Dan lok')
-for book in Book:# for loop
-    print(book.title) # displaying all books by Dan lok, using it title
+# retrieving book by a specific author, 
+author = Author.objects.get(name=author_name)
+books = author.books.all()  # Retrieves all books by the author
+    
 
 
 # retrieving book in a given library, in this case i assume, "Library_name" as the given library
-Library = Library.objects.get(name=library_name)
-book = library.books.all()
+library = Library.objects.get(name=library_name)
+book = Library.books.all()
 
 
 # Retrieving librarian of a given library
