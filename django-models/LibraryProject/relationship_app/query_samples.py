@@ -6,9 +6,9 @@ for book in Book:# for loop
     print(book.title) # displaying all books by Dan lok, using it title
 
 
-# retrieving book in a given library, in this case i assume, "My_library " as the given library
-library = Library.objects.get(name = 'My_library')
-book = library.book_set.all()
+# retrieving book in a given library, in this case i assume, "Library_name" as the given library
+library = Library.objects.get(name = 'library_name')
+book = library.books.all()
 
 
 # Retrieving librarian of a given library
