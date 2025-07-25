@@ -14,9 +14,8 @@ book = library.books.all()
 
 # Retrieving librarian of a given library
 # first we get the library to retrieve the librarian working there, and its said to be only one per library
-
-library = Library.objects.get(name='my_library')
-librarian = library.Librarian
+library = Library.objects.get(name=library_name)  
+librarian = Librarian.objects.get(library=library)  
 
 
     
