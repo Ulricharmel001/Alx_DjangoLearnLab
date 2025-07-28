@@ -6,8 +6,7 @@ from django.views.generic import DetailView, ListView, CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
-
-
+from django.views.generic.detail import DetailView
 
 
  
