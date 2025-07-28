@@ -21,7 +21,7 @@ def list_books(request):
 
     context = {'books': books}  # Create a context dictionary with book list
     
-    return render(request, 'list_books.html', {'books' : books})
+    return render(request, 'relationship_app/ list_books/', {'books' : books})
 
 
 ''' Class base view displays details for a 
