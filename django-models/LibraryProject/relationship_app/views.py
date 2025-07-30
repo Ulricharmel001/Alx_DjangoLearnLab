@@ -9,6 +9,7 @@ from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView a
 from django.views.generic.detail import DetailView
 
 
+
  
 
 
