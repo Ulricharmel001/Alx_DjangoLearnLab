@@ -14,13 +14,21 @@ class Author(models.Model):
     name = models.CharField(max_length=200)
     def __str__(self):
         return self.name
+from django.db import models
+
 class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
-    publication_year = models.DateField()
-    
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+
+    class Meta:
+        permissions = [
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
+        ]
+
     def __str__(self):
-        return F"Book Title: {self.title}, Author: {self.author}"
+        return self.title
 """
 creating a library model that relate to book using django ManyToManyField, that is a library can hold many
 instance of books and and many book model can be in library
