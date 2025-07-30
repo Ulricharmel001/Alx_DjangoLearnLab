@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.models import AbstractUser
+
 # Create your models here.
 
 """
@@ -57,8 +59,6 @@ class UserProfile(models.Model):
         return f'{self.user}, {self.role}'
     
 
-# in models.py
-from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
