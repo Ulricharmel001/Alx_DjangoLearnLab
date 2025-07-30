@@ -44,7 +44,7 @@ class Librarian(models.Model):
         return f"Librarian: {self.name}, Library : {self.library}"
 
         """User profile model """
-class UserProfile (models.Model):
+class UserProfile(models.Model):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('librarian', 'Librarian'),
