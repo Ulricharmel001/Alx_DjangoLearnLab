@@ -1,8 +1,8 @@
 from .models import Library 
-
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import  Library, Book
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import DetailView, CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
@@ -56,3 +56,23 @@ class LoginView(DjangoLoginView):
 # Logout View using Django's built-in view
 class LogoutView(DjangoLogoutView):
     template_name = 'relationship_app/logout.html'  # optional; you can redirect to login or home
+
+def check_role(role):
+    def decorator(user):
+        return hasattr(user, 'userprofile') and user.userprofile.role == role
+    return decorator
+
+@login_required
+@user_passes_test(check_role('Admin'))
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+@login_required
+@user_passes_test(check_role('Librarian'))
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+@login_required
+@user_passes_test(check_role('Member'))
+def member_view(request):
+    return render(request, 'member_view.html')
