@@ -38,7 +38,7 @@ class LibraryDetailView(DetailView):
 ''' Creating user authentication views, register, login and logout'''
 # Signup/Register View using built-in UserCreationForm
 class register(CreateView):
-    form_class = UserCreationForm
+    form_class = UserCreationForm()
     template_name = 'relationship_app/register.html'  
     success_url = reverse_lazy('login')  # Redirect to login page after successful signup
 
