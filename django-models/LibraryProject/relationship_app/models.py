@@ -55,6 +55,18 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=200, choices=ROLE_CHOICES)
     def __str__(self):
         return f'{self.user}, {self.role}'
+    
+
+# in models.py
+from django.contrib.auth.models import AbstractUser
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('Admin', 'Admin'),
+        ('User', 'User'),
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')
+
 
     
 
