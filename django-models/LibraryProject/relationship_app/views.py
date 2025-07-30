@@ -154,3 +154,25 @@ def delete_book(request, pk):
         return redirect('book_list')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
 
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render
+from .models import UserProfile
+
+def check_role(user, role):
+    return hasattr(user, 'userprofile') and user.userprofile.role == role
+
+@login_required
+@user_passes_test(lambda user: check_role(user, 'Admin'))
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+@login_required
+@user_passes_test(lambda user: check_role(user, 'Librarian'))
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+@login_required
+@user_passes_test(lambda user: check_role(user, 'Member'))
+def member_view(request):
+    return render(request, 'member_view.html')
