@@ -1,131 +1,92 @@
-from .models import Library 
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import  Library, Book
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView, CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView as DjangoLoginView, LogoutView as DjangoLogoutView
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from .models import Library, Book
+from .forms import BookForm
 
-from django.contrib.auth import login
-
-
-
- 
-
-
-# Create your views here.
-#"""Retrieves all books and renders a template displaying the list and author."""
-  
-    
-   # List all books with their authors
+# View to display a list of all books in the system.
+# Retrieves all Book objects from the database and passes them to the template for rendering.
 def list_books(request):
-    model = Book
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
 
-''' Class base view displays details for a 
-specific library, listing all books available in that library.'''
-# View for library detail with list of books
+# Class-based view that shows detailed information about a specific library.
+# Uses Django's DetailView to handle fetching the library by its primary key and passing it to the template.
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'relationship_app/library_detail.html' 
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
 
-
-''' Creating user authentication views, register, login and logout'''
-# Signup/Register View using built-in UserCreationForm
+# View to handle user registration.
+# Uses Django's built-in UserCreationForm to allow users to sign up.
+# On successful registration, redirects the user to the login page.
 class register(CreateView):
-    form_class = UserCreationForm()
-    template_name = 'relationship_app/register.html'  
-    success_url = reverse_lazy('login')  # Redirect to login page after successful signup
+    form_class = UserCreationForm
+    template_name = 'relationship_app/register.html'
+    success_url = reverse_lazy('login')
 
 
-#Login View using Django's built-in view
+# View to handle user login.
+# Extends Django's built-in LoginView.
+# Redirects already authenticated users to the book list page.
 class LoginView(DjangoLoginView):
     template_name = 'relationship_app/login.html'
     redirect_authenticated_user = True
-    # NOTE: success_url doesn't work here unless you override get_success_url()
 
+    # Defines where to redirect users after successful login.
     def get_success_url(self):
-        return reverse_lazy('books')  # redirect after login
+        return reverse_lazy('books')
 
 
-# Logout View using Django's built-in view
+# View to handle user logout.
+# Extends Django's built-in LogoutView.
+# Optionally can use a template to confirm logout.
 class LogoutView(DjangoLogoutView):
-    template_name = 'relationship_app/logout.html'  # optional; you can redirect to login or home
+    template_name = 'relationship_app/logout.html'
 
-def check_role(role):
-    def decorator(user):
-        return hasattr(user, 'userprofile') and user.userprofile.role == role
-    return decorator
 
+# Helper function to check if the logged-in user has a specific role.
+# Returns True if the user has an associated UserProfile and the role matches.
+def check_role(user, role):
+    return hasattr(user, 'userprofile') and user.userprofile.role == role
+
+
+# View restricted to users with the 'Admin' role.
+# Requires the user to be logged in and pass the role check.
+# Renders a template specific to admin users.
 @login_required
-@user_passes_test(check_role('Admin'))
+@user_passes_test(lambda user: check_role(user, 'Admin'))
 def admin_view(request):
-    return render(request, 'admin_view.html')
+    return render(request, 'relationship_app/admin_view.html')
 
+
+# View restricted to users with the 'Librarian' role.
+# Requires the user to be logged in and pass the role check.
+# Renders a template specific to librarians.
 @login_required
-@user_passes_test(check_role('Librarian'))
+@user_passes_test(lambda user: check_role(user, 'Librarian'))
 def librarian_view(request):
-    return render(request, 'librarian_view.html')
+    return render(request, 'relationship_app/librarian_view.html')
 
+
+# View restricted to users with the 'Member' role.
+# Requires the user to be logged in and pass the role check.
+# Renders a template specific to members.
 @login_required
-@user_passes_test(check_role('Member'))
+@user_passes_test(lambda user: check_role(user, 'Member'))
 def member_view(request):
-    return render(request, 'member_view.html')
+    return render(request, 'relationship_app/member_view.html')
 
 
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
-
-def is_admin(user):
-    return user.is_authenticated and user.userprofile.role == 'Admin'
-
-@user_passes_test(is_admin)
-def admin_view(request):
-    return render(request, 'admin_view.html')
-
-
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
-
-def is_librarian(user):
-    return user.is_authenticated and user.userprofile.role == 'Librarian'
-
-@user_passes_test(is_librarian)
-def librarian_view(request):
-    return render(request, 'librarian_view.html')
-
-
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
-
-def is_member(user):
-    return user.is_authenticated and user.userprofile.role == 'Member'
-
-@user_passes_test(is_member)
-def member_view(request):
-    return render(request, 'member_view.html')
-
-def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
-
-@login_required
-@user_passes_test(is_admin)
-def admin_view(request):
-    return render(request, 'admin_view.html')
-
-
-
-
-from django.contrib.auth.decorators import permission_required
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Book
-from .forms import BookForm
-
+# View to add a new book to the system.
+# Only accessible to users with the 'can_add_book' permission.
+# On POST request, validates and saves the new book form.
+# On GET request, renders an empty form.
 @permission_required('relationship_app.can_add_book')
 def add_book(request):
     if request.method == 'POST':
@@ -137,6 +98,11 @@ def add_book(request):
         form = BookForm()
     return render(request, 'relationship_app/book_form.html', {'form': form})
 
+
+# View to edit an existing book.
+# Only accessible to users with the 'can_change_book' permission.
+# Retrieves the book by primary key and binds it to a form.
+# Saves changes if the form is valid.
 @permission_required('relationship_app.can_change_book')
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
@@ -146,6 +112,10 @@ def edit_book(request, pk):
         return redirect('book_list')
     return render(request, 'relationship_app/book_form.html', {'form': form})
 
+
+# View to delete a book from the system.
+# Only accessible to users with the 'can_delete_book' permission.
+# Confirms deletion via POST request before deleting the book.
 @permission_required('relationship_app.can_delete_book')
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
@@ -153,26 +123,3 @@ def delete_book(request, pk):
         book.delete()
         return redirect('book_list')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
-
-
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
-from .models import UserProfile
-
-def check_role(user, role):
-    return hasattr(user, 'userprofile') and user.userprofile.role == role
-
-@login_required
-@user_passes_test(lambda user: check_role(user, 'Admin'))
-def admin_view(request):
-    return render(request, 'admin_view.html')
-
-@login_required
-@user_passes_test(lambda user: check_role(user, 'Librarian'))
-def librarian_view(request):
-    return render(request, 'librarian_view.html')
-
-@login_required
-@user_passes_test(lambda user: check_role(user, 'Member'))
-def member_view(request):
-    return render(request, 'member_view.html')

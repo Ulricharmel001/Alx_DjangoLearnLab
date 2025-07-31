@@ -1,24 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-
-"""
-creating relation between author and books, using ForeignKey 
-with this , if we delete an Author, we automatically delete all their books as well
-"""
+# ========================
+# Author Model
+# ========================
 class Author(models.Model):
     name = models.CharField(max_length=200)
+
     def __str__(self):
         return self.name
-from django.db import models
 
+# ========================
+# Book Model
+# ========================
 class Book(models.Model):
     title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    publication_year = models.DateField(null=True, blank=True)
 
     class Meta:
         permissions = [
@@ -29,57 +28,47 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
-"""
-creating a library model that relate to book using django ManyToManyField, that is a library can hold many
-instance of books and and many book model can be in library
-"""
 
+# ========================
+# Library Model
+# ========================
 class Library(models.Model):
     name = models.CharField(max_length=200)
-    books = models.ManyToManyField(Book, related_name='books')
+    books = models.ManyToManyField(Book, related_name='libraries')
 
     def __str__(self):
-        return f"Library : {self.name}, Books :{self.books}"
+        return f"Library: {self.name} ({self.books.count()} books)"
 
-"""
-librarian model that has one-to-one Field relationship with library, this means that if you 
-delete a library you delete, the librarian as well
-
-"""
+# ========================
+# Librarian Model
+# ========================
 class Librarian(models.Model):
     name = models.CharField(max_length=200)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Librarian: {self.name}, Library : {self.library}"
+        return f"Librarian: {self.name}, Library: {self.library.name}"
 
-        """User profile model """
-from django.db import models
-from django.contrib.auth.models import User
-
-class UserProfile(models.Model):
+# ========================
+# Custom User Model
+# ========================
+class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('Admin', 'Admin'),
         ('Librarian', 'Librarian'),
         ('Member', 'Member'),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
+
+    def __str__(self):
+        return self.username
+
+# ========================
+# User Profile Model
+# ========================
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=CustomUser.ROLE_CHOICES)
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
-
-
-
-class CustomUser(AbstractUser):
-    ROLE_CHOICES = (
-        ('Admin', 'Admin'),
-        ('User', 'User'),
-    )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')
-
-
-    
-
-    
-    

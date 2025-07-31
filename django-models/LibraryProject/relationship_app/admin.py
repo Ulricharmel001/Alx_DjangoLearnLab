@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import admin
 from .models import Library, Book  , Author, Librarian
 
 
@@ -9,6 +10,6 @@ admin.site.register(Librarian)
 
 class BookAdmin(admin.ModelAdmin):
     list_display =('title', 'author')
-    fields = ('title', 'author', 'publicaton_year')
+    fields = ('title', 'author', 'publication_year')
     
 admin.site.register(Book)
