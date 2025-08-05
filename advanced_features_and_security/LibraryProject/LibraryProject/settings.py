@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 # Tell Django to use your custom user model
-
+AUTH_USER_MODEL ='bookshelf.CustomUser'
 
 
 # Application definition
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'relationship_app.apps.RelationshipAppConfig',
+   'bookshelf'
 ]
 
 MIDDLEWARE = [
@@ -128,5 +128,3 @@ LOGOUT_REDIRECT_URL = '/login/'
 SIGNUP_REDIRECT_URL = 'login' 
 LOGIN_REDIRECT_URL = '/redirect/'  # This path maps to the redirect_based_on_role view
 LOGIN_URL = '/books/'
-# AUTH_USER_MODEL = 'relationship.CustomUserManager'
-AUTH_USER_MODEL = 'relationship_app.CustomUser'
