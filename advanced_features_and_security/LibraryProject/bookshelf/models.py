@@ -14,7 +14,7 @@ class Book(models.Model):
 
 
 # Creating custom User model
-class BaseUserManager(BaseExceptionGroup):
+class CustomUserManager(BaseUserManager):
     
     def create_user(self, email, password):
         if not email:
