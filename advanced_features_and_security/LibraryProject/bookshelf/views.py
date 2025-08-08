@@ -21,7 +21,7 @@ def create_book(request):
             return redirect('book_list')
     else:
         form = ExampleForm()
-    return render(request, 'bookshelf/create_book.html', {'form': form})
+    return render(request, 'bookshelf/form_example.html', {'form': form})
 
 
 # View to edit a book (requires can_edit permission)
