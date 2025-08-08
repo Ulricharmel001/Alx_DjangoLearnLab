@@ -130,10 +130,87 @@ LOGIN_REDIRECT_URL = '/redirect/'  # This path maps to the redirect_based_on_rol
 LOGIN_URL = '/books/'
 
 
-# Security changes for this project
-SECURE_BROWSER_XSS_FILTER = True
+# # Security changes for this project
+# SECURE_BROWSER_XSS_FILTER = True
+# X_FRAME_OPTIONS = 'DENY'
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = False
+
+# ===============================
+# Django Security Settings for HTTPS and Secure Web Communication
+# ===============================
+
+# 1. Redirect all HTTP requests to HTTPS
+# This forces browsers to use HTTPS, improving security by encrypting data in transit.
+# WARNING: Set to True only when you have SSL/TLS correctly configured in production!
+SECURE_SSL_REDIRECT = False  # Redirect HTTP -> HTTPS
+
+# 2. HTTP Strict Transport Security (HSTS) settings
+# Instruct browsers to only access the site via HTTPS for the specified period (in seconds).
+# 31536000 seconds = 1 year, recommended for production.
+SECURE_HSTS_SECONDS = 31536000
+
+# Include all subdomains in the HSTS policy. Recommended for comprehensive HTTPS enforcement.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+
+
+# Allows your domain to be included in browsers' preloaded HSTS lists.
+# This means browsers will know your site is HTTPS only even before first visit.
+SECURE_HSTS_PRELOAD = True
+
+# 3. Cookies security
+# Ensure session cookies are only sent over HTTPS connections to prevent interception.
+SESSION_COOKIE_SECURE = False
+
+# Ensure CSRF cookies are only sent over HTTPS, protecting against cross-site request forgery.
+CSRF_COOKIE_SECURE = False
+
+# 4. HTTP Security Headers
+
+# Prevent your site from being embedded in frames/iframes to avoid clickjacking attacks.
 X_FRAME_OPTIONS = 'DENY'
+
+# Prevent browsers from MIME-sniffing a response away from the declared content-type.
+# Helps avoid certain types of attacks based on content-type confusion.
 SECURE_CONTENT_TYPE_NOSNIFF = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = False 
+
+# Enable the browser's built-in Cross-Site Scripting (XSS) filter and block detected attacks.
+SECURE_BROWSER_XSS_FILTER = True
+
+# 5. Additional recommendations (optional but good practice)
+
+# Set a Content Security Policy (CSP) to restrict the sources of content (scripts, images, styles, etc.)
+# You can configure django-csp or add custom middleware for this.
+# Example:
+# CSP_DEFAULT_SRC = ("'self'",)
+# CSP_SCRIPT_SRC = ("'self'", "trusted-scripts.example.com")
+
+# ===============================
+# Important Notes:
+# - These settings should be enabled in your **production environment only**, where HTTPS is properly set up.
+# - During development (local testing), it's common to set SECURE_SSL_REDIRECT = False
+#   and disable cookie security flags to avoid issues without HTTPS.
+#
+# Example to differentiate dev and prod settings:
+#
+# import os
+# DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+#
+# if not DEBUG:
+#     SECURE_SSL_REDIRECT = True
+#     SESSION_COOKIE_SECURE = True
+#     CSRF_COOKIE_SECURE = True
+#     SECURE_HSTS_SECONDS = 31536000
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True
+# else:
+#     SECURE_SSL_REDIRECT = False
+#     SESSION_COOKIE_SECURE = False
+#     CSRF_COOKIE_SECURE = False
+#     SECURE_HSTS_SECONDS = 0
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+#     SECURE_HSTS_PRELOAD = False
+#
+# ===============================
