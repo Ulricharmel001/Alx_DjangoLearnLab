@@ -7,7 +7,12 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ('publication_year', )
 
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'date_of_birth')
+    list_display = ('email', 'is_staff', 'username'  )
+    # add_fieldsets =(
+    #     {
+
+    #     }
+    # )
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
