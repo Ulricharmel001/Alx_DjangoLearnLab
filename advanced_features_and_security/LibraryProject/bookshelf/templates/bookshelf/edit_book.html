@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Book - {{ book.title }}</title>
+</head>
+<body>
+    <h1>Edit Book: {{ book.title }}</h1>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+
+    <a href="{% url 'book_list' %}">Back to Book List</a>
+</body>
+</html>

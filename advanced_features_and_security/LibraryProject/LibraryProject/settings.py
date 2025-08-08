@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=^fc%^jg!wj6&6t=ywq&ncd7)#4shjtu#i0#flm19g_(@u$x_h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Tell Django to use your custom user model
 AUTH_USER_MODEL ='bookshelf.CustomUser'
 
@@ -128,3 +128,12 @@ LOGOUT_REDIRECT_URL = '/login/'
 SIGNUP_REDIRECT_URL = 'login' 
 LOGIN_REDIRECT_URL = '/redirect/'  # This path maps to the redirect_based_on_role view
 LOGIN_URL = '/books/'
+
+
+# Security changes for this project
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False 
