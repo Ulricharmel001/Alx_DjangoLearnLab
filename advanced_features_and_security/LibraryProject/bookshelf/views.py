@@ -9,7 +9,7 @@ from .models import Book
 
 # View to edit a book (only users with can_edit permission can access)
 @permission_required('books.can_edit', raise_exception=True)
-def edit_book(request, book_id):
+def book_list(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
         # process form data here...
