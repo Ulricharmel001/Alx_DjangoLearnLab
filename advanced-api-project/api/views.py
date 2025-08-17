@@ -1,52 +1,38 @@
-from django.shortcuts import render
-from rest_framework import generics, permissions
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
 
-
-# Create your views here.
-
-# List all books
-class BookListView(generics.ListAPIView):
+# List and Create (anyone can read, only logged-in users can create)
+class BookListView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]  # anyone can view
+    permission_classes = [IsAuthenticatedOrReadOnly]   
 
 
-# Retrieve a single book
+# Detail view (anyone can read, only logged-in users can update/delete)
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]  # anyone can view
+    permission_classes = [IsAuthenticatedOrReadOnly]   
 
 
-# Create a book
+# Create view (only authenticated users)
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # only logged-in users
+    permission_classes = [IsAuthenticated]   
 
 
-# Update a book
+# Update view (only authenticated users)
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # only logged-in users
+    permission_classes = [IsAuthenticated]   
 
 
-# Delete a book
+# Delete view (only authenticated users)
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # only logged-in users
-
-
-
-class BookCreateView(generics.CreateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        # Example: attach the logged-in user as creator (if Book has a "created_by" field)
-        serializer.save()
+    permission_classes = [IsAuthenticated]   
