@@ -8,4 +8,15 @@
 
 Permissions:
 - Unauthenticated users: Read-only
-- Authenticated users: Full CRUD
+- Authenticated users: Full 
+
+
+
+# API Testing
+
+I used Django’s test framework with DRF’s APITestCase.
+
+## Run Tests
+```bash
+python manage.py test api
+
