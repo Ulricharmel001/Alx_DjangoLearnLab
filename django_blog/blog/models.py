@@ -16,7 +16,7 @@ class Post(models.Model):
         return self.title  # Display post title in admin panel
 
 
-# blog/models.py
+#models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -33,3 +33,28 @@ class Post(models.Model):
     # Redirect to post detail page after creating/updating
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.pk})
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+# Comment model to store comments on posts
+class Comment(models.Model):
+    # Link comment to a specific post; many comments can belong to one post
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    
+    # Link comment to the user who wrote it
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    # The actual text content of the comment
+    content = models.TextField()
+    
+    # Timestamp when the comment was created
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Timestamp when the comment was last updated
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # String representation of the comment
+    def __str__(self):
+        return f'Comment by {self.author.username} on {self.post.title}'

@@ -1,19 +1,70 @@
 {% extends 'blog/base.html' %}
+
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<div class="card">
-  <div class="card-header">
-    <h2>{{ post.title }}</h2>
-    <small class="text-muted">By {{ post.author.username }} | {{ post.published_date|date:"M d, Y H:i" }}</small>
-  </div>
-  <div class="card-body">
-    <p>{{ post.content }}</p>
-    {% if user == post.author %}
-      <a href="{% url 'post_update' post.pk %}" class="btn btn-warning">Edit</a>
-      <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
-    {% endif %}
-    <a href="{% url 'post_list' %}" class="btn btn-secondary">Back to All Posts</a>
-  </div>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <!-- Post Title and Meta Info -->
+        <h2>{{ post.title }}</h2>
+        <p class="text-muted">By {{ post.author.username }} | {{ post.published_date|date:"M d, Y" }}</p>
+
+        <!-- Post Content -->
+        <p>{{ post.content }}</p>
+
+        <!-- Edit/Delete buttons visible only to post author -->
+        {% if user == post.author %}
+        <a href="{% url 'post_update' post.pk %}" class="btn btn-primary me-2">Edit</a>
+        <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
+        {% endif %}
+
+        <a href="{% url 'post_list' %}" class="btn btn-secondary mt-2">Back to Posts</a>
+    </div>
+</div>
+
+<!-- Comments Section -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4>Comments</h4>
+        <hr>
+
+        <!-- Comment Form for Authenticated Users -->
+        {% if user.is_authenticated %}
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            {{ comment_form }}
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Post Comment</button>
+        </form>
+        {% else %}
+        <p class="text-muted">Please <a href="{% url 'login' %}">login</a> to comment.</p>
+        {% endif %}
+
+        <!-- List of Comments -->
+        <div class="list-group">
+            {% for comment in post.comments.all %}
+            <div class="list-group-item mb-2 shadow-sm">
+                <div class="d-flex justify-content-between">
+                    <!-- Comment Author and Timestamp -->
+                    <div>
+                        <strong>{{ comment.author.username }}</strong>
+                        <small class="text-muted"> • {{ comment.created_at|date:"d M Y H:i" }}</small>
+                    </div>
+
+                    <!-- Edit/Delete buttons visible only to comment author -->
+                    {% if user == comment.author %}
+                    <div>
+                        <a href="{% url 'edit_comment' comment.id %}" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
+                        <a href="{% url 'delete_comment' comment.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- Comment Content -->
+                <p class="mt-2">{{ comment.content }}</p>
+            </div>
+            {% empty %}
+            <p class="text-muted">No comments yet. Be the first to comment!</p>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

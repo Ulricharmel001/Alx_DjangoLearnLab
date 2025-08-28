@@ -20,3 +20,24 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content']  # Author will be assigned automatically in view
+
+
+
+
+
+from django import forms
+from .models import Comment
+
+# Form to create or update a comment
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Write a comment...'
+        }),
+        label=''  # Hide the default label
+    )
+
+    class Meta:
+        model = Comment
+        fields = ['content']  # Only the content field is editable; post and author are set in view

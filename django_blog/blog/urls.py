@@ -2,6 +2,7 @@
 from django.urls import path
 from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
 from . import views
+from .views import CommentDeleteView, CommentUpdateView
 
 urlpatterns = [
     path('', PostListView.as_view(), name='post_list'),  # <-- this MUST exist
@@ -15,4 +16,9 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
+
+    # comments
+path('comment/<int:pk>/edit/', CommentUpdateView.as_view(), name='edit_comment'),
+path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete_comment'),
 ]
+

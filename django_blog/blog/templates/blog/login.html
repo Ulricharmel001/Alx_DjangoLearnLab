@@ -1,44 +1,32 @@
-<!-- blog/templates/blog/login.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - Django Blog</title>
-    <style>
-        body { font-family: Arial; background: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .form-container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 350px; }
-        h2 { text-align: center; margin-bottom: 20px; }
-        form p { margin-bottom: 15px; }
-        button { width: 100%; padding: 10px; background: #0275d8; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background: #025aa5; }
-        .error { color: red; margin-bottom: 15px; }
-        .register-link { text-align: center; margin-top: 10px; }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h2>Login</h2>
+{% extends 'blog/base.html' %}
+{% block title %}Login{% endblock %}
 
-        {% if error %}
-            <div class="error">{{ error }}</div>
-        {% endif %}
-
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <p>
-                <label for="username">Username:</label><br>
-                <input type="text" name="username" required>
-            </p>
-            <p>
-                <label for="password">Password:</label><br>
-                <input type="password" name="password" required>
-            </p>
-            <button type="submit">Login</button>
-        </form>
-
-        <div class="register-link">
-            Don't have an account? <a href="{% url 'register' %}">Register here</a>.
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title mb-4 text-center">Login</h2>
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100">Login</button>
+                </form>
+                <p class="mt-3 text-center">
+                    Don't have an account? <a href="{% url 'register' %}">Register</a>
+                </p>
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

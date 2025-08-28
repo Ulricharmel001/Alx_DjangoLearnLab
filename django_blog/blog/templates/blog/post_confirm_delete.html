@@ -2,14 +2,19 @@
 {% block title %}Delete Post{% endblock %}
 
 {% block content %}
-<div class="card">
-  <div class="card-body">
-    <h3>Are you sure you want to delete "{{ post.title }}"?</h3>
-    <form method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Yes, Delete</button>
-      <a href="{% url 'post_detail' post.pk %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h2 class="mb-4">Delete Post</h2>
+                <p>Are you sure you want to delete "<strong>{{ post.title }}</strong>"?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="{% url 'post_detail' post.pk %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

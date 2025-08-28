@@ -29,16 +29,16 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            next_url = request.GET.get('next', 'home')  # Redirect to next if exists
-            return redirect(next_url)
+            return redirect('post_list')  # Redirect to your posts list view
         else:
             error = "Invalid username or password"
             return render(request, 'blog/login.html', {'error': error})
     return render(request, 'blog/login.html')
-
+           
+    
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('login')
 
 @login_required
 def profile_view(request):
@@ -53,6 +53,8 @@ def profile_view(request):
 # --------------------------
 
 # Make the PostListView act as home page
+
+
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -89,3 +91,67 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+    
+
+
+
+
+from django.shortcuts import redirect
+from django.views.generic import DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Post, Comment
+from .forms import CommentForm
+
+# Display post details and comments, handle new comment submissions
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Include a blank comment form in the template context
+        context['comment_form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # Handles POST requests (when a user submits a comment)
+        self.object = self.get_object()  # Get the current post
+        form = CommentForm(request.POST)
+        if form.is_valid() and request.user.is_authenticated:
+            comment = form.save(commit=False)
+            comment.post = self.object  # Associate comment with this post
+            comment.author = request.user  # Set the comment author
+            comment.save()  # Save to database
+            return redirect('post_detail', pk=self.object.pk)
+        # If form invalid, re-render page with form errors
+        context = self.get_context_data(comment_form=form)
+        return self.render_to_response(context)
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/edit_comment.html'
+
+    # Ensure only the author can edit
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    # Redirect back to post after editing
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/delete_comment.html'
+
+    # Ensure only the author can delete
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    # Redirect back to post after deleting
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
