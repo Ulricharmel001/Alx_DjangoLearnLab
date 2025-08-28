@@ -1,0 +1,21 @@
+<!-- blog/templates/blog/post_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ object.title }} - Django Blog</title>
+</head>
+<body>
+    <h1>{{ object.title }}</h1>
+    <p>By {{ object.author.username }} on {{ object.published_date }}</p>
+    <p>{{ object.content }}</p>
+
+    {% if user == object.author %}
+        <p>
+            <a href="{% url 'post_update' object.pk %}">Edit</a> |
+            <a href="{% url 'post_delete' object.pk %}">Delete</a>
+        </p>
+    {% endif %}
+    <p><a href="{% url 'post_list' %}">Back to Posts</a></p>
+</body>
+</html>

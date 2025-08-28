@@ -1,0 +1,26 @@
+<!-- blog/templates/blog/post_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts - Django Blog</title>
+</head>
+<body>
+    <h1>All Posts</h1>
+    {% if user.is_authenticated %}
+        <p><a href="{% url 'post_create' %}">Create New Post</a> | <a href="{% url 'profile' %}">Profile</a> | <a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a></p>
+    {% endif %}
+
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a> by {{ post.author.username }} on {{ post.published_date }}
+            </li>
+        {% empty %}
+            <li>No posts yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

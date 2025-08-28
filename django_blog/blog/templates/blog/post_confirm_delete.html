@@ -1,0 +1,18 @@
+<!-- blog/templates/blog/post_confirm_delete.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Post - Django Blog</title>
+</head>
+<body>
+    <h1>Delete Post</h1>
+    <p>Are you sure you want to delete "{{ object.title }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+    </form>
+    <p><a href="{% url 'post_detail' object.pk %}">Cancel</a></p>
+</body>
+</html>

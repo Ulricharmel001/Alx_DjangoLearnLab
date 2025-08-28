@@ -1,0 +1,19 @@
+<!-- blog/templates/blog/post_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if object %}Edit{% else %}Create{% endif %} Post - Django Blog</title>
+</head>
+<body>
+    <h1>{% if object %}Edit{% else %}Create{% endif %} Post</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+    </form>
+
+    <p><a href="{% url 'post_list' %}">Back to Posts</a></p>
+</body>
+</html>
