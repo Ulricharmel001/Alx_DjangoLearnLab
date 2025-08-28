@@ -1,18 +1,15 @@
-<!-- blog/templates/blog/post_confirm_delete.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Delete Post - Django Blog</title>
-</head>
-<body>
-    <h1>Delete Post</h1>
-    <p>Are you sure you want to delete "{{ object.title }}"?</p>
+{% extends 'blog/base.html' %}
+{% block title %}Delete Post{% endblock %}
 
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h3>Are you sure you want to delete "{{ post.title }}"?</h3>
     <form method="post">
-        {% csrf_token %}
-        <button type="submit">Yes, Delete</button>
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'post_detail' post.pk %}" class="btn btn-secondary">Cancel</a>
     </form>
-    <p><a href="{% url 'post_detail' object.pk %}">Cancel</a></p>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

@@ -1,26 +1,24 @@
-<!-- blog/templates/blog/post_list.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Posts - Django Blog</title>
-</head>
-<body>
-    <h1>All Posts</h1>
-    {% if user.is_authenticated %}
-        <p><a href="{% url 'post_create' %}">Create New Post</a> | <a href="{% url 'profile' %}">Profile</a> | <a href="{% url 'logout' %}">Logout</a></p>
-    {% else %}
-        <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a></p>
-    {% endif %}
+{% extends 'blog/base.html' %}
+{% block title %}All Posts{% endblock %}
 
-    <ul>
-        {% for post in posts %}
-            <li>
-                <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a> by {{ post.author.username }} on {{ post.published_date }}
-            </li>
-        {% empty %}
-            <li>No posts yet.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% block content %}
+<h1 class="mb-4">All Blog Posts</h1>
+<div class="row">
+  {% for post in posts %}
+    <div class="col-md-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}</h5>
+          <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+          <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary">Read More</a>
+        </div>
+        <div class="card-footer text-muted">
+          By {{ post.author.username }} | {{ post.published_date|date:"M d, Y" }}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>No posts available.</p>
+  {% endfor %}
+</div>
+{% endblock %}

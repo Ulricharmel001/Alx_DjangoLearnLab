@@ -1,21 +1,19 @@
-<!-- blog/templates/blog/post_detail.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ object.title }} - Django Blog</title>
-</head>
-<body>
-    <h1>{{ object.title }}</h1>
-    <p>By {{ object.author.username }} on {{ object.published_date }}</p>
-    <p>{{ object.content }}</p>
+{% extends 'blog/base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
 
-    {% if user == object.author %}
-        <p>
-            <a href="{% url 'post_update' object.pk %}">Edit</a> |
-            <a href="{% url 'post_delete' object.pk %}">Delete</a>
-        </p>
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2>{{ post.title }}</h2>
+    <small class="text-muted">By {{ post.author.username }} | {{ post.published_date|date:"M d, Y H:i" }}</small>
+  </div>
+  <div class="card-body">
+    <p>{{ post.content }}</p>
+    {% if user == post.author %}
+      <a href="{% url 'post_update' post.pk %}" class="btn btn-warning">Edit</a>
+      <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
-    <p><a href="{% url 'post_list' %}">Back to Posts</a></p>
-</body>
-</html>
+    <a href="{% url 'post_list' %}" class="btn btn-secondary">Back to All Posts</a>
+  </div>
+</div>
+{% endblock %}

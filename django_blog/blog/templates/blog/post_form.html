@@ -1,19 +1,18 @@
-<!-- blog/templates/blog/post_form.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% if object %}Edit{% else %}Create{% endif %} Post - Django Blog</title>
-</head>
-<body>
-    <h1>{% if object %}Edit{% else %}Create{% endif %} Post</h1>
+{% extends 'blog/base.html' %}
+{% block title %}{% if form.instance.pk %}Edit Post{% else %}New Post{% endif %}{% endblock %}
 
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2>{% if form.instance.pk %}Edit Post{% else %}Create New Post{% endif %}</h2>
+  </div>
+  <div class="card-body">
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-success">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+      <a href="{% url 'post_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
-
-    <p><a href="{% url 'post_list' %}">Back to Posts</a></p>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}
