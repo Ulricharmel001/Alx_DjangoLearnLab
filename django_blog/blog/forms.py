@@ -18,16 +18,18 @@ class PostForm(forms.ModelForm):
     """
     Post form. 'tags' comes from taggit and accepts comma-separated input.
     """
+    from django import forms
+from .models import Post
+from taggit.forms import TagWidget  # <-- add this
+
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags']  # ✅ include tags
+        fields = ['title', 'content', 'tags']  # added tags field
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Post title'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 6, 'placeholder': 'Write your post...'}),
+            'tags': TagWidget(),  
         }
-        help_texts = {
-            'tags': "Add comma-separated tags (e.g. django, python, web)."
-        }
+
 
 class CommentForm(forms.ModelForm):
     """
