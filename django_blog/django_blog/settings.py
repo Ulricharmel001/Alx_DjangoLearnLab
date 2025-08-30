@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -76,9 +77,8 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_blog'
-        '',   # your database name
-        'USER': 'root',        # the MySQL user you created
+        'NAME': 'django_blog', # db name  
+        'USER': 'root',       
         'PASSWORD': 'ulrich',  # the password you set
         'HOST': 'localhost',     # since it's local
         'PORT': '3306',          # default MySQL port

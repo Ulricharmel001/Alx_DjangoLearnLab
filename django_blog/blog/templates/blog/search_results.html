@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Search{% if query %}: {{ query }}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <h3 class="mb-3">Search{% if query %}: “{{ query }}”{% endif %}</h3>
+
+  {% if query and results %}
+    {% for post in results %}
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h5>
+          <p class="text-muted mb-1">By {{ post.author.username }} • {{ post.published_date|date:"M d, Y" }}</p>
+          <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+          <div class="mt-2">
+            {% for tag in post.tags.all %}
+              <a class="badge text-bg-light border" href="{% url 'posts_by_tag' tag.slug %}">#{{ tag.name }}</a>
+            {% empty %}
+              <small class="text-muted">No tags</small>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% elif query %}
+    <p class="text-muted">No results for “{{ query }}”.</p>
+  {% else %}
+    <p class="text-muted">Enter a search term above.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -11,6 +11,16 @@
                 <h5 class="card-title">{{ post.title }}</h5>
                 <p class="card-text">{{ post.content|truncatechars:100 }}</p>
                 <p class="text-muted">By {{ post.author.username }} | {{ post.published_date|date:"M d, Y" }}</p>
+
+                <!-- Tags -->
+                <div class="mb-2">
+                    {% for tag in post.tags.all %}
+                        <a class="badge bg-light text-dark border" href="{% url 'posts_by_tag' tag.slug %}">#{{ tag.name }}</a>
+                    {% empty %}
+                        <small class="text-muted">No tags</small>
+                    {% endfor %}
+                </div>
+
                 <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary-custom">Read More</a>
             </div>
         </div>

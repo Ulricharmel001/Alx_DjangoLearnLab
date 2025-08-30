@@ -8,6 +8,10 @@ from .forms import RegisterForm, PostForm
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from taggit.models import Tag  # from django-taggit
+
 
 
 # --------------------------
@@ -171,3 +175,69 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_id']})
+    
+
+
+
+
+from django.db.models import Q  # Q objects allow complex queries
+
+def search_view(request):
+    """
+    Handles search functionality.
+    - Gets the query string from GET parameters.
+    - Filters posts by title, content, or associated tags.
+    - Passes the results to the search_results template.
+    """
+    query = request.GET.get('q')  # Retrieve search keyword
+    results = Post.objects.none()  # Initialize empty queryset
+    if query:
+        # Search title, content, and tags (case-insensitive)
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()  # Avoid duplicates if multiple tags match
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
+
+
+# ... keep your existing imports and views (PostListView, PostDetailView, etc.)
+
+def search(request):
+    """
+    Search posts by title, content, or tag names.
+    URL: /search/?q=term
+    """
+    query = request.GET.get('q', '').strip()
+    results = Post.objects.none()
+
+    if query:
+        results = (
+            Post.objects
+            .filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)  # ✅ search by tag name
+            )
+            .distinct()
+            .order_by('-published_date')
+        )
+
+    context = {
+        'query': query,
+        'results': results,
+    }
+    return render(request, 'blog/search_results.html', context)
+
+def posts_by_tag(request, tag_slug):
+    """
+    List posts that have a specific tag.
+    URL: /tags/<tag_slug>/
+    """
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = Post.objects.filter(tags__in=[tag]).order_by('-published_date')
+    context = {
+        'tag': tag,
+        'posts': posts,
+    }
+    return render(request, 'blog/posts_by_tag.html', context)
