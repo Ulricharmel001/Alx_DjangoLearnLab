@@ -38,11 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # default django apps...
+    # third party apps
     'rest_framework',
     'rest_framework.authtoken',
     'accounts',
-    # add other apps later (posts, notifications...)
+    #my apps
+
+    'posts',
 ]
 
 REST_FRAMEWORK = {
@@ -53,9 +55,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 5,
+    'DEFAULT_FILTER_BACKENDS': [
+        'rest_framework.filters.SearchFilter',]
 }
-
 
 AUTH_USER_MODEL = 'accounts.User'
 
