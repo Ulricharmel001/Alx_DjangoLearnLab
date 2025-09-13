@@ -16,15 +16,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['id', 'username', 'email', 'password']
 
     def create(self, validated_data):
-        # explicitly create user using create_user
-        user = User.objects.create_user(**validated_data)  # <-- check requires this
+        # explicitly create user using get_user_model().objects.create_user
+        user = get_user_model().objects.create_user(**validated_data)
         # explicitly create a token for the user
-        Token.objects.create(user=user)  #check requires this
+        Token.objects.create(user=user)
         return user
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
