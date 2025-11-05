@@ -11,7 +11,7 @@ from taggit.managers import TaggableManager
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from taggit.managers import TaggableManager  # ✅ import TaggableManager
+from taggit.managers import TaggableManager  
 
 class Post(models.Model):
     """
